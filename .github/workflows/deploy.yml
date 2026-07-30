@@ -1,0 +1,67 @@
+name: Build & Deploy to Hostinger
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm run install:ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build production bundle
+        run: npm run build
+
+      - name: Verify deployment artifacts
+        run: |
+          test -f client/build/index.html || (echo "❌ index.html not found" && exit 1)
+          test -f client/build/.htaccess || (echo "❌ .htaccess not found" && exit 1)
+          echo "✓ All deployment artifacts present"
+
+      - name: Push built files to deployment branch
+        if: success()
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+          # Create/update deployment branch with only the built output
+          git checkout --orphan deployment-temp 2>/dev/null || git checkout deployment-temp
+          git rm -rf . --cached
+
+          # Copy only build artifacts
+          cp -r client/build/* .
+
+          # Stage and commit
+          git add -A
+          git commit -m "Deploy: $(date -u +'%Y-%m-%d %H:%M:%S UTC') - ${{ github.sha }}" --allow-empty
+          git push -f origin deployment-temp:deployment
+
+      - name: Create deployment summary
+        run: |
+          echo "## ✓ Deployment Ready"
+          echo ""
+          echo "**Built artifacts committed to \`deployment\` branch.**"
+          echo ""
+          echo "Next steps:"
+          echo "1. In Hostinger hPanel → **Advanced** → **Git**"
+          echo "2. Repository URL: \`${{ github.server_url }}/${{ github.repository }}.git\`"
+          echo "3. Branch: \`deployment\`"
+          echo "4. Deployment path: \`/public_html\`"
+          echo ""
+          echo "**Manual deployment alternative:**"
+          echo "Download dist/rvnl-nirman-setu-\$(date +%Y-%m-%d).zip from workflow artifacts"
