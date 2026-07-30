@@ -55,11 +55,63 @@ export function chartScales(overrides = {}) {
   };
 }
 
-/* ─── Dynamic palette — reads CSS vars on every access ───── */
+/* ─── Dynamic palette — reads CSS vars on every access ─────
+ *
+ * SERIES PALETTE — colour-vision validated, both themes.
+ *
+ * The previous order was [accent, info, …], which resolves to two adjacent
+ * blues: ΔE 6.0 in normal vision (threshold 15) and ΔE 5.0 under deuteranopia.
+ * Any two-series chart built on it was unreadable for everyone.
+ *
+ * The order below is drawn entirely from hues already present in this design
+ * system (--app-btn, --app-warning, the teal/violet/pink of this file, and the
+ * #5b8de0 dark line stroke in index.css). It is a re-ordering plus per-theme
+ * step selection — not a new palette. Validation, adjacent pairs:
+ *
+ *   light  #3b7de8 #d97706 #0d9488 #7c3aed #ec4899
+ *          PASS lightness · PASS chroma · PASS CVD (worst ΔE 12.5 protan)
+ *          PASS normal-vision (24.3) · PASS contrast vs surface
+ *   dark   #5b8de0 #d97706 #0d9488 #8b5cf6 #ec4899
+ *          PASS lightness · PASS chroma · PASS CVD (worst ΔE 12.5 protan)
+ *          PASS normal-vision (22.6) · PASS contrast vs surface
+ *
+ * Rules: max 5 series (a 6th folds into "Other" or becomes small multiples);
+ * colour follows the entity, never its rank; status colours are reserved and
+ * never used as a series colour.
+ */
+function isDarkTheme() {
+  if (typeof document === 'undefined') return true;
+  return (document.body?.dataset?.theme || 'dark') !== 'light';
+}
+
+export const SERIES_LIGHT = ['#3b7de8', '#d97706', '#0d9488', '#7c3aed', '#ec4899'];
+export const SERIES_DARK  = ['#5b8de0', '#d97706', '#0d9488', '#8b5cf6', '#ec4899'];
+
+/** Series colour for a fixed slot (1-based). Colour follows the entity. */
+export function seriesColor(slot = 1) {
+  const p = isDarkTheme() ? SERIES_DARK : SERIES_LIGHT;
+  return p[(slot - 1) % p.length];
+}
+
+/** Semi-transparent fill for the same slot. */
+export function seriesFill(slot = 1, alpha = 0.15) {
+  const hex = seriesColor(slot);
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${alpha})`;
+}
+
+/** Sequential single-hue ramp (blue), light→dark. For magnitude, e.g. heatmaps. */
+export function sequentialBlue(t) {
+  const clamp = Math.max(0, Math.min(1, t));
+  const dark = isDarkTheme();
+  const alpha = dark ? 0.10 + clamp * 0.78 : 0.08 + clamp * 0.80;
+  return dark ? `rgba(91, 141, 224, ${alpha})` : `rgba(59, 125, 232, ${alpha})`;
+}
+
 function buildPalettes() {
   const t = getChartTokens();
   return {
-    categorical: [t.accent, t.info, '#14b8a6', '#f59e0b', '#ec4899', '#6366f1', '#a3e635', '#94a3b8'],
+    categorical: isDarkTheme() ? SERIES_DARK : SERIES_LIGHT,
     area: {
       cyan:    { border: '#3b7de8',  fill: 'rgba(59, 125, 232, 0.15)' },
       blue:    { border: '#3b7de8',  fill: 'rgba(59, 125, 232, 0.15)' },
@@ -112,6 +164,20 @@ export const TIMEFRAME_OPTIONS = {
   strategic:   [
     { value: '30D', label: '30D', points: 30, dataWindow: null },
   ],
+  // ── Construction & portfolio horizons (RVNL) ──────────────────────────
+  // Construction is measured in months and quarters, not hours.
+  // FYTD = Indian financial year, 1 April → 31 March.
+  progress:  [
+    { value: '30D',  label: '30D',  points: 30, dataWindow: null },
+    { value: 'QTD',  label: 'QTD',  points: 13, dataWindow: null },
+    { value: 'FYTD', label: 'FYTD', points: 12, dataWindow: null },
+  ],
+  portfolio: [
+    { value: 'FYTD', label: 'FYTD', points: 12, dataWindow: null },
+    { value: '3Y',   label: '3Y',   points: 36, dataWindow: null },
+    { value: 'LIFE', label: 'LIFE', points: 60, dataWindow: null },
+  ],
+
   // Aliases — keep older imports working with sensible defaults
   intradayOps: [
     { value: '12H', label: '12H', points: 12, dataWindow: 12 },

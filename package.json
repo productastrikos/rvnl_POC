@@ -1,14 +1,16 @@
 {
-  "name": "enterprise-dashboard-template",
+  "name": "rvnl-nirman-setu",
   "version": "1.0.0",
-  "description": "Enterprise Admin Dashboard UI Template",
+  "description": "RVNL Nirman Setu — Integrated Project Command Centre for Rail Vikas Nigam Limited",
   "private": true,
   "engines": {
     "node": ">=18"
   },
   "scripts": {
-    "dev": "cd client && npm start",
-    "build": "npm install --prefix client && npm run build --prefix client",
-    "install:all": "cd client && npm install"
+    "dev": "npm start --prefix client",
+    "start": "npm start --prefix client",
+    "build": "npm run build --prefix client",
+    "test": "npm test --prefix client -- --watchAll=false",
+    "install:all": "npm install --prefix client"
   }
 }

@@ -42,6 +42,21 @@ export const IcoSignal     = () => <Ico><path d="M2 20h.01M7 20v-4"/><path d="M1
 export const IcoGlobe      = () => <Ico><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></Ico>;
 export const IcoAttendance = () => <Ico><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M9 16l2 2 4-4"/></Ico>;
 
+/* ─── RVNL domain icons — same line-art system (24×24, stroke 1.8) ──────── */
+export const IcoTrack      = () => <Ico><path d="M7 3L4 21"/><path d="M17 3l3 18"/><line x1="5.5" y1="8" x2="18.5" y2="8"/><line x1="4.9" y1="13" x2="19.1" y2="13"/><line x1="4.3" y1="18" x2="19.7" y2="18"/></Ico>;
+export const IcoTrain      = () => <Ico><rect x="5" y="3" width="14" height="13" rx="3"/><path d="M5 11h14"/><circle cx="9" cy="13.5" r="0.5" fill="currentColor"/><circle cx="15" cy="13.5" r="0.5" fill="currentColor"/><path d="M7.5 16L5 21M16.5 16L19 21"/><path d="M4 21h16"/></Ico>;
+export const IcoBridge     = () => <Ico><path d="M2 8h20"/><path d="M3 8v11M21 8v11"/><path d="M3 15a9 7 0 0118 0"/><path d="M8 19v-5M16 19v-5M12 19v-7"/></Ico>;
+export const IcoTunnel     = () => <Ico><path d="M3 21V12a9 9 0 0118 0v9"/><path d="M8.5 21v-9a3.5 3.5 0 017 0v9"/><path d="M2 21h20"/></Ico>;
+export const IcoLand       = () => <Ico><path d="M3 7l6-3 6 3 6-3v13l-6 3-6-3-6 3z"/><path d="M9 4v13M15 7v13"/></Ico>;
+export const IcoRupee      = () => <Ico><path d="M7 4h10"/><path d="M7 9h10"/><path d="M15 4c0 4-2.7 5-6 5H7l8 11"/></Ico>;
+export const IcoHelmet     = () => <Ico><path d="M3.5 17a8.5 8.5 0 0117 0"/><path d="M8 8.5V5a1 1 0 011-1h6a1 1 0 011 1v3.5"/><path d="M2 17h20"/></Ico>;
+export const IcoGavel      = () => <Ico><path d="M13 3l8 8"/><path d="M17.5 2.5l4 4"/><path d="M11.5 4.5l4 4"/><path d="M14 10l-8 8"/><path d="M3 21h9"/></Ico>;
+export const IcoLayers     = () => <Ico><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></Ico>;
+export const IcoSync       = () => <Ico><path d="M21 2v6h-6"/><path d="M3 22v-6h6"/><path d="M3.5 9a9 9 0 0114.9-3.4L21 8"/><path d="M20.5 15a9 9 0 01-14.9 3.4L3 16"/></Ico>;
+export const IcoSignature  = () => <Ico><path d="M3 17c3-6 5-6 6-3s3 3 5-1 4-2 7 1"/><path d="M3 21h18"/></Ico>;
+export const IcoFolder     = () => <Ico><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></Ico>;
+export const IcoSearchDoc  = () => <Ico><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><circle cx="11.5" cy="14.5" r="2.5"/><path d="M13.5 16.5L16 19"/></Ico>;
+
 export function deriveRag(color) {
   if (!color) return 'normal';
   if (color.includes('red'))                                                        return 'critical';
