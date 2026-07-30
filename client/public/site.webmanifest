@@ -1,0 +1,19 @@
+{
+  "name": "RVNL Nirman Setu — Integrated Project Command Centre",
+  "short_name": "Nirman Setu",
+  "description": "Integrated project command centre for Rail Vikas Nigam Limited",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0f172a",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any"
+    }
+  ]
+}

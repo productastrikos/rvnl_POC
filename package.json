@@ -11,6 +11,10 @@
     "start": "npm start --prefix client",
     "build": "npm run build --prefix client",
     "test": "npm test --prefix client -- --watchAll=false",
-    "install:all": "npm install --prefix client"
+    "install:all": "npm install --prefix client",
+    "install:ci": "npm ci --prefix client",
+    "package": "npm run build && node scripts/package.js",
+    "preview": "npx --yes serve -s client/build -l 5000",
+    "clean": "node -e \"require('fs').rmSync('client/build',{recursive:true,force:true});require('fs').rmSync('dist',{recursive:true,force:true})\""
   }
 }

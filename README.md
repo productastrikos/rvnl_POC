@@ -1,6 +1,19 @@
-# Enterprise Admin Dashboard — UI Template
+# RVNL Nirman Setu — Integrated Project Command Centre
 
-A production-ready, fully self-contained React admin dashboard template. No backend, no API, no authentication required — all data is static and bundled with the frontend.
+A fully self-contained React application. No backend, no API, no authentication
+— all data is bundled with the frontend.
+
+| | |
+|---|---|
+| **Run locally** | `npm run install:all` then `npm run dev` → http://localhost:3000 |
+| **Deploy to Hostinger** | **[DEPLOYMENT.md](DEPLOYMENT.md)** — build, package, upload, SSL, troubleshooting |
+| **Product & data spec** | [docs/](docs/) |
+
+> **Note:** the sections below this line are inherited from the original UI
+> template and describe a different product (waste-management modules, a
+> backend on port 5000, Netlify deployment, demo credentials). None of that
+> applies to this application — treat [DEPLOYMENT.md](DEPLOYMENT.md) and
+> [docs/](docs/) as authoritative.
 
 ---
 

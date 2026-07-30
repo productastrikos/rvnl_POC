@@ -1,3 +1,19 @@
 node_modules/
 client/node_modules/
 client/build/
+
+# Deployment archives produced by `npm run package`
+dist/
+
+# Local environment overrides (.env.production is committed — it holds build
+# flags, not secrets)
+.env.local
+.env.*.local
+client/.env.local
+client/.env.*.local
+
+# Editor / OS noise
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*

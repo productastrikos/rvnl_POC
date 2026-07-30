@@ -1,0 +1,115 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  RVNL Nirman Setu — Apache / LiteSpeed configuration for Hostinger
+#
+#  This file is copied verbatim into build/ by react-scripts and must sit next
+#  to index.html in public_html. Without it, every deep link (/twin,
+#  /projects/RVNL-001, ...) returns a 404 on refresh, because the server looks
+#  for a directory that does not exist — React Router owns those paths, not
+#  Apache.
+#
+#  Deploying into a SUBFOLDER (e.g. example.com/nirman-setu)? See DEPLOYMENT.md
+#  — you must change RewriteBase and the fallback target below.
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ─── 1. Baseline hardening ──────────────────────────────────────────────────
+# If the whole site returns 500 immediately after upload, comment this line
+# out: a few shared-hosting configs disallow Options overrides in .htaccess.
+# Nothing else here depends on it.
+Options -Indexes -MultiViews
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # ─── 2. Force HTTPS ───────────────────────────────────────────────────────
+  # Hostinger terminates SSL at the proxy, so test the forwarded header too.
+  # Comment this block out while testing on a plain-HTTP preview domain.
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # ─── 3. SPA fallback ──────────────────────────────────────────────────────
+  # Anything that is not a real file or directory renders index.html and lets
+  # React Router resolve the route client-side.
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
+
+# ─── 4. Compression ─────────────────────────────────────────────────────────
+# The main bundle is ~830 KB raw and ~240 KB gzipped — this is the single
+# biggest win on first load.
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css
+  AddOutputFilterByType DEFLATE application/javascript application/x-javascript
+  AddOutputFilterByType DEFLATE application/json application/xml
+  AddOutputFilterByType DEFLATE application/manifest+json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/css
+  AddOutputFilterByType BROTLI_COMPRESS application/javascript application/json
+  AddOutputFilterByType BROTLI_COMPRESS image/svg+xml
+</IfModule>
+
+# ─── 5. Caching ─────────────────────────────────────────────────────────────
+<IfModule mod_headers.c>
+  # Webpack-hashed assets (main.29558229.js) — the filename changes whenever
+  # the content does, so they can be cached forever.
+  <FilesMatch "\.[0-9a-f]{8}\.(js|css)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+
+  # Unhashed static assets (logo, favicon) — a week, so a re-upload is picked
+  # up without a year-long stale window.
+  <FilesMatch "\.(png|jpe?g|gif|svg|ico|webp|woff2?|ttf|eot)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+
+  # index.html must never be cached, or browsers keep loading the old bundle
+  # after a deploy.
+  <FilesMatch "\.(html|webmanifest|json)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+
+  # ─── 6. Security headers ──────────────────────────────────────────────────
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), interest-cohort=()"
+
+  # HSTS — enable only once HTTPS is confirmed working on the live domain.
+  # Browsers honour this for a year and will refuse plain HTTP afterwards.
+  # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+  # Content-Security-Policy — starter policy covering everything the app
+  # actually talks to. Verify the digital-twin map still renders before
+  # committing to it in production.
+  # Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://server.arcgisonline.com https://*.tiles.openrailwaymap.org https://*.basemaps.cartocdn.com; connect-src 'self'; frame-ancestors 'self'"
+</IfModule>
+
+# ─── 7. MIME types ──────────────────────────────────────────────────────────
+<IfModule mod_mime.c>
+  AddType application/manifest+json  .webmanifest
+  AddType image/svg+xml              .svg
+  AddType font/woff2                 .woff2
+  AddType application/javascript     .js
+</IfModule>
+
+# ─── 8. Block access to files that should never be served ───────────────────
+# Dotfiles plus any stray env/source-map/log/backup file. The webpack
+# .LICENSE.txt is deliberately left reachable — it is the attribution notice
+# for the bundled open-source dependencies.
+<FilesMatch "(^\.|\.(env|map|log|bak|old|orig)$)">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>

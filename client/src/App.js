@@ -47,7 +47,9 @@ export default function App() {
 
   return (
     <SocketProvider>
-      <Router>
+      {/* basename tracks PUBLIC_URL so the same build works at the domain root
+          or inside a subfolder (see PUBLIC_URL in client/.env.production). */}
+      <Router basename={process.env.PUBLIC_URL || '/'}>
         <Layout theme={theme} onThemeToggle={() => setTheme(t => (t === 'dark' ? 'light' : 'dark'))}>
           <Routes>
             {/* Command */}

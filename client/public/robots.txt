@@ -1,0 +1,4 @@
+# RVNL Nirman Setu — internal command centre demo.
+# Not intended for public search indexing.
+User-agent: *
+Disallow: /
