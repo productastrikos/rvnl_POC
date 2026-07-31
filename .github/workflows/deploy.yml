@@ -18,19 +18,16 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm run install:ci
+      - name: Install dependencies (auto-builds via postinstall)
+        run: npm ci
 
       - name: Run tests
         run: npm test
 
-      - name: Build production bundle
-        run: npm run build
-
       - name: Verify deployment artifacts
         run: |
-          test -f client/build/index.html || (echo "❌ index.html not found" && exit 1)
-          test -f client/build/.htaccess || (echo "❌ .htaccess not found" && exit 1)
+          test -f build/index.html || (echo "❌ index.html not found" && exit 1)
+          test -f build/.htaccess || (echo "❌ .htaccess not found" && exit 1)
           echo "✓ All deployment artifacts present"
 
       - name: Push built files to deployment branch
@@ -44,7 +41,7 @@ jobs:
           git rm -rf . --cached
 
           # Copy only build artifacts
-          cp -r client/build/* .
+          cp -r build/* .
 
           # Stage and commit
           git add -A

@@ -1,6 +1,6 @@
 # RVNL Nirman Setu — Platform Blueprint
 
-Production-grade design for **Rail Vikas Nigam Limited's** Integrated Project Command Centre, built on the existing UI design system in [`client/`](../client).
+Production-grade design for **Rail Vikas Nigam Limited's** Integrated Project Command Centre, built on the existing UI design system in [the repository root](../client).
 
 ## Read in order
 
@@ -14,7 +14,7 @@ Production-grade design for **Rail Vikas Nigam Limited's** Integrated Project Co
 
 The blueprint preserves the existing colour theme, KPI card design, icon style and visual language. §0 states the contract explicitly — every frozen token, component and rule is traced to its source file.
 
-**One correction is proposed, with evidence.** The current `CHART_PALETTES.categorical` in [`chartUtils.js`](../client/src/components/chartUtils.js) fails colour-vision validation in both themes (slots 1 and 2 are two adjacent blues — ΔE 6.0 normal vision, indistinguishable to *everyone*). §0.5 supplies a validated replacement drawn **entirely from hues already present in the design system** — a re-ordering and per-theme step selection, not a new palette.
+**One correction is proposed, with evidence.** The current `CHART_PALETTES.categorical` in [`chartUtils.js`](../src/components/chartUtils.js) fails colour-vision validation in both themes (slots 1 and 2 are two adjacent blues — ΔE 6.0 normal vision, indistinguishable to *everyone*). §0.5 supplies a validated replacement drawn **entirely from hues already present in the design system** — a re-ordering and per-theme step selection, not a new palette.
 
 ## Quick reference
 

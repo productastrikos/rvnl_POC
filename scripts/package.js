@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* ═══════════════════════════════════════════════════════════════════════════
-   Packages client/build into dist/<name>.zip, ready to upload straight into
+   Packages build/ into dist/<name>.zip, ready to upload straight into
    Hostinger's public_html via hPanel → File Manager → Upload → Extract.
 
    The archive contains the CONTENTS of build/ (index.html at the top level),
@@ -17,7 +17,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const buildDir = path.join(root, 'client', 'build');
+const buildDir = path.join(root, 'build');
 const distDir = path.join(root, 'dist');
 
 function fail(message) {

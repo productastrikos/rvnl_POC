@@ -111,7 +111,7 @@ Inside RVNL Core, the ten domain modules are **hard-bounded**: each owns a Postg
 
 - **WebSocket gateway** in RVNL Core (Socket.IO), rooms per `project:{id}`, `piu:{id}`, `zone:{code}`, `user:{id}`.
 - Server pushes: new alert, advisory generated, approval landed in your inbox, DSR submitted for review, bill status change, sync completion for your device.
-- The client contract already exists: [`services/socket.js`](../client/src/services/socket.js) exposes `DataContext` with `{ kpis, alerts, advisories, lastUpdate, connected, acknowledgeAlert }`. **Keep this shape** — replace the seed constants with live subscription state and the UI needs no changes.
+- The client contract already exists: [`services/socket.js`](../src/services/socket.js) exposes `DataContext` with `{ kpis, alerts, advisories, lastUpdate, connected, acknowledgeAlert }`. **Keep this shape** — replace the seed constants with live subscription state and the UI needs no changes.
 - Degradation: if WS is unavailable, the client falls back to 60s polling on `/api/v1/dashboard/*` with `If-None-Match`.
 
 ## 4.5 Storage strategy

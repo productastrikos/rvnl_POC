@@ -5,7 +5,7 @@ A fully self-contained React application. No backend, no API, no authentication
 
 | | |
 |---|---|
-| **Run locally** | `npm run install:all` then `npm run dev` → http://localhost:3000 |
+| **Run locally** | `npm install` then `npm run dev` → http://localhost:3000 |
 | **Deploy to Hostinger** | **[DEPLOYMENT.md](DEPLOYMENT.md)** — build, package, upload, SSL, troubleshooting |
 | **Product & data spec** | [docs/](docs/) |
 
@@ -45,27 +45,27 @@ A fully self-contained React application. No backend, no API, no authentication
 ## Project Structure
 
 ```
-client/
-  src/
-    App.js               # Routes + static user
-    index.css            # Design tokens, theme, component CSS
-    components/
-      Layout.js          # Sidebar, header, alert + advisory panels
-      KPICard.js         # KPI card component
-      KPIDetailModal.js  # KPI drill-down modal
-      AdvisoryPanel.js   # AI advisory slide-out panel
-      AlertPanel.js      # Real-time alerts slide-out panel
-      ZoneFilterBar.js   # Segment filter pill bar
-      chartUtils.js      # Chart tokens, timeframe control, helpers
-    pages/
-      Dashboard.js       # Main overview page
-      Operations.js      # 3-tab operations page
-      Analytics.js       # 3-tab analytics page
-      CitizenServices.js # Services/requests page
-      DigitalTwin.js     # Full-page map view
-    services/
-      socket.js          # Static data context provider
-      api.js             # Static API stubs
+src/
+  App.js               # Routes + static user
+  index.css            # Design tokens, theme, component CSS
+  components/
+    Layout.js          # Sidebar, header, alert + advisory panels
+    KPICard.js         # KPI card component
+    KPIDetailModal.js  # KPI drill-down modal
+    AdvisoryPanel.js   # AI advisory slide-out panel
+    AlertPanel.js      # Real-time alerts slide-out panel
+    ZoneFilterBar.js   # Segment filter pill bar
+    chartUtils.js      # Chart tokens, timeframe control, helpers
+  pages/
+    Dashboard.js       # Main overview page
+    Operations.js      # 3-tab operations page
+    Analytics.js       # 3-tab analytics page
+    CitizenServices.js # Services/requests page
+    DigitalTwin.js     # Full-page map view
+  services/
+    socket.js          # Static data context provider
+    api.js             # Static API stubs
+server.js              # Node entry point for Hostinger Node.js app hosting
 ```
 
 ---
@@ -73,29 +73,29 @@ client/
 ## Quick Start
 
 ```bash
-# Install dependencies
-cd client && npm install
+# Install dependencies (also runs the production build via postinstall)
+npm install
 
 # Start development server (http://localhost:3000)
-npm start
+npm run dev
 ```
 
 Or from the project root:
 
 ```bash
-npm run dev      # starts client dev server
-npm run build    # produces client/build/
+npm run build    # produces build/
+npm start        # serves build/ via server.js (production mode)
 ```
 
 ---
 
 ## Customisation
 
-**Retheming** — all colours are CSS custom properties in `client/src/index.css`. Change `--app-panel`, `--app-accent`, and `--app-advisory` to instantly retheme every component.
+**Retheming** — all colours are CSS custom properties in `src/index.css`. Change `--app-panel`, `--app-accent`, and `--app-advisory` to instantly retheme every component.
 
-**KPI values** — edit the `SEED_KPIS` and `SEED_BINS_SUMMARY` objects in `client/src/services/socket.js`.
+**KPI values** — edit the `SEED_KPIS` and `SEED_BINS_SUMMARY` objects in `src/services/socket.js`.
 
-**Navigation labels** — update `NAV_SECTIONS` and `PAGE_TITLES` in `client/src/components/Layout.js`.
+**Navigation labels** — update `NAV_SECTIONS` and `PAGE_TITLES` in `src/components/Layout.js`.
 
 **Static advisories / alerts** — edit `STATIC_ADVISORIES` in `AdvisoryPanel.js` and `SEED_ALERTS` in `socket.js`.
 

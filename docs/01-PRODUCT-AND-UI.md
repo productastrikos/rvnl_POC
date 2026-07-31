@@ -13,7 +13,7 @@ Everything below is derived from the **existing template**, not invented. The co
 
 ## 0.1 Frozen tokens — do not change
 
-Source of truth: [`client/src/index.css`](../client/src/index.css) `:root` / `body[data-theme='light']`.
+Source of truth: [`src/index.css`](../src/index.css) `:root` / `body[data-theme='light']`.
 
 | Token group | Dark (default) | Light | Rule |
 |---|---|---|---|
@@ -32,13 +32,13 @@ Source of truth: [`client/src/index.css`](../client/src/index.css) `:root` / `bo
 
 | Component | File | Reuse rule |
 |---|---|---|
-| `KPICard` | [`components/KPICard.js`](../client/src/components/KPICard.js) | The **only** stat tile. Extend by adding icons, never by editing layout. |
+| `KPICard` | [`components/KPICard.js`](../src/components/KPICard.js) | The **only** stat tile. Extend by adding icons, never by editing layout. |
 | Icon library (`Ico*`) | same file | All new icons follow §0.4 exactly. |
-| `AlertPanel` | [`components/AlertPanel.js`](../client/src/components/AlertPanel.js) | Right slide-over, `w-80`, grouped critical→warning→info. |
-| `AdvisoryPanel` | [`components/AdvisoryPanel.js`](../client/src/components/AdvisoryPanel.js) | Purple slide-over, `w-96`. Advisory JSON shape is frozen (§9). |
-| `ZoneFilterBar` | [`components/ZoneFilterBar.js`](../client/src/components/ZoneFilterBar.js) | Generalise `ZONES` → Railway Zone / Corridor. Markup unchanged. |
-| `ChartTimeframeControl` | [`components/chartUtils.js`](../client/src/components/chartUtils.js) | Only permitted timeframe control. |
-| `Layout` shell | [`components/Layout.js`](../client/src/components/Layout.js) | Sidebar + topbar + slide-overs. Extend `NAV_SECTIONS` / `SEARCH_INDEX` / `PAGE_TITLES` only. |
+| `AlertPanel` | [`components/AlertPanel.js`](../src/components/AlertPanel.js) | Right slide-over, `w-80`, grouped critical→warning→info. |
+| `AdvisoryPanel` | [`components/AdvisoryPanel.js`](../src/components/AdvisoryPanel.js) | Purple slide-over, `w-96`. Advisory JSON shape is frozen (§9). |
+| `ZoneFilterBar` | [`components/ZoneFilterBar.js`](../src/components/ZoneFilterBar.js) | Generalise `ZONES` → Railway Zone / Corridor. Markup unchanged. |
+| `ChartTimeframeControl` | [`components/chartUtils.js`](../src/components/chartUtils.js) | Only permitted timeframe control. |
+| `Layout` shell | [`components/Layout.js`](../src/components/Layout.js) | Sidebar + topbar + slide-overs. Extend `NAV_SECTIONS` / `SEARCH_INDEX` / `PAGE_TITLES` only. |
 | Utility classes | `index.css` | `.glass-panel`, `.status-chip-*`, `.progress-track/fill`, `.page-header-block`, `.page-title`, `.page-subtitle`, `.app-control-btn`, `.icon-btn`, `.app-timeframe-control` |
 
 ## 0.3 KPI card anatomy — frozen, memorise it
@@ -84,7 +84,7 @@ export const IcoSignature= () => <Ico><path d="M3 17c3-6 5-6 6-3s3 3 5-1 4-2 7 1
 
 ## 0.5 Chart contract — **validated**, and it corrects a real defect
 
-Charts read tokens through [`chartUtils.js`](../client/src/components/chartUtils.js) (`getChartTokens`, `chartTooltip`, `chartScales`). Keep that plumbing.
+Charts read tokens through [`chartUtils.js`](../src/components/chartUtils.js) (`getChartTokens`, `chartTooltip`, `chartScales`). Keep that plumbing.
 
 **Finding.** The current `CHART_PALETTES.categorical` — `[accent, info, #14b8a6, #f59e0b, #ec4899, #6366f1, #a3e635, #94a3b8]` — **fails accessibility validation in both themes**:
 
@@ -97,7 +97,7 @@ Charts read tokens through [`chartUtils.js`](../client/src/components/chartUtils
 
 Slots 1 and 2 are two blues sitting next to each other. Any two-series chart built on the default order is unreadable.
 
-**Fix — no new design system.** Every hue below is already present in the template (`--app-btn`, `--app-warning`, the `chartUtils` teal/pink/violet, and the dark line stroke `#5b8de0` at [`index.css:346`](../client/src/index.css#L346)). This is a **re-ordering and per-theme step selection**, nothing more. It passes all six checks in both themes:
+**Fix — no new design system.** Every hue below is already present in the template (`--app-btn`, `--app-warning`, the `chartUtils` teal/pink/violet, and the dark line stroke `#5b8de0` at [`index.css:346`](../src/index.css#L346)). This is a **re-ordering and per-theme step selection**, nothing more. It passes all six checks in both themes:
 
 ```js
 // chartUtils.js — replace the categorical array
@@ -210,7 +210,7 @@ Concretely, it is the system of record for:
 
 ## 2.2 Navigation structure
 
-Drop-in replacement for `NAV_SECTIONS` in [`Layout.js`](../client/src/components/Layout.js). Icon strings are 24×24 path data in the existing 1.6-stroke nav style.
+Drop-in replacement for `NAV_SECTIONS` in [`Layout.js`](../src/components/Layout.js). Icon strings are 24×24 path data in the existing 1.6-stroke nav style.
 
 ```js
 const NAV_SECTIONS = [

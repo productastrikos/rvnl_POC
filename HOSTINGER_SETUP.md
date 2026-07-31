@@ -159,12 +159,12 @@ Wait for Hostinger to auto-pull. By default, Hostinger checks every 12 hours; yo
 
 To serve from `https://example.com/nirman-setu/` instead of the root:
 
-1. In `client/.env.production`, change:
+1. In `.env.production`, change:
    ```
    PUBLIC_URL=/nirman-setu
    ```
 
-2. In `client/public/.htaccess`, change both paths in the rewrite block:
+2. In `public/.htaccess`, change both paths in the rewrite block:
    ```apache
    RewriteBase /nirman-setu/
    RewriteRule . /nirman-setu/index.html [L]

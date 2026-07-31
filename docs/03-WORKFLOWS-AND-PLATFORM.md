@@ -251,7 +251,7 @@ A clearance in `granted` with open conditions renders as `.status-chip-warning`,
 
 ## 9.1 Alert system
 
-Alerts are emitted by rules evaluated on domain events and on a nightly batch. They reuse the **existing** alert shape from [`socket.js`](../client/src/services/socket.js) — `{ alertId, type, category, title, message, zone, assetId, acknowledged, createdAt }` — so `AlertPanel` needs no change.
+Alerts are emitted by rules evaluated on domain events and on a nightly batch. They reuse the **existing** alert shape from [`socket.js`](../src/services/socket.js) — `{ alertId, type, category, title, message, zone, assetId, acknowledged, createdAt }` — so `AlertPanel` needs no change.
 
 | Rule | Trigger | Type | Category |
 |---|---|---|---|
@@ -430,7 +430,7 @@ The React SPA gets a service worker with a cached app shell, cached last-viewed 
 
 | Layer | Choice | Reasoning |
 |---|---|---|
-| **Web frontend** | React 18 + React Router 6, Tailwind + CSS custom properties, Chart.js via `react-chartjs-2`, Leaflet via `react-leaflet`, `three` for the optional twin | **Already the template's stack** — [`client/package.json`](../client/package.json). No migration, no design-system drift. |
+| **Web frontend** | React 18 + React Router 6, Tailwind + CSS custom properties, Chart.js via `react-chartjs-2`, Leaflet via `react-leaflet`, `three` for the optional twin | **Already the template's stack** — [`package.json`](../package.json). No migration, no design-system drift. |
 | **Mobile (field)** | **Flutter** | Better offline story than RN for this use case: mature SQLite (Drift), reliable background isolates for sync, consistent camera/GPS behaviour on the low-end Android devices actually used at site, and single-binary distribution. RN is viable if RVNL wants React skill reuse — but the offline engine is the hard part, and Flutter's is stronger. |
 | **Backend** | **Node.js 20 + NestJS + TypeScript** | Modular monolith with first-class module boundaries and DI, which is exactly the §4 architecture. Shares TypeScript types with the React client. Large Indian talent pool for PSU staffing/AMC. *(Java/Spring Boot is an equally defensible choice if RVNL's IT policy standardises on Java — the architecture is unchanged.)* |
 | **Intelligence** | Python 3.11 + FastAPI, XGBoost/scikit-learn, `pgvector` | Separate deployable (§4.1). |

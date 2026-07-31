@@ -1,6 +1,5 @@
 node_modules/
-client/node_modules/
-client/build/
+build/
 
 # Deployment archives produced by `npm run package`
 dist/
@@ -9,8 +8,6 @@ dist/
 # flags, not secrets)
 .env.local
 .env.*.local
-client/.env.local
-client/.env.*.local
 
 # Editor / OS noise
 .DS_Store

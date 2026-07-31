@@ -2,14 +2,20 @@
 
 The application is a **single-page React app with no backend**. Every figure on
 every screen comes from the dataset bundled at
-[rvnlData.js](client/src/data/rvnlData.js), and
-[api.js](client/src/services/api.js) resolves it in-memory rather than over the
-network. There is no server to run, no database to provision and no API keys to
-configure.
+[rvnlData.js](src/data/rvnlData.js), and
+[api.js](src/services/api.js) resolves it in-memory rather than over the
+network. There is no database to provision and no API keys to configure.
 
-That means it deploys as **static files** into Hostinger's `public_html`. Any
-Hostinger Web/Premium/Business shared plan is enough — you do **not** need the
-Node.js hosting or a VPS.
+It can be deployed two ways:
+
+- **Static files** into Hostinger's `public_html` (any Web/Premium/Business
+  shared plan — see §3 Option A/B below).
+- **Node.js app hosting** using the `server.js` entry point at the repository
+  root, which serves the exact same build output (see §3 Option C below). This
+  is the option that supports fully automatic Git-based deploys on shared
+  hosting, since Hostinger's Node.js panel runs `npm install` for you, which
+  triggers the production build automatically via the `postinstall` script —
+  no manual build step and no extra entry file to create.
 
 ---
 
@@ -41,7 +47,7 @@ that is missing it.
 From the repository root:
 
 ```bash
-npm run install:all     # first time only
+npm install     # first time only — also runs the production build
 npm run package
 ```
 
@@ -76,22 +82,41 @@ locally it will work on Hostinger.
 5. Delete the `.zip` afterwards so it is not publicly downloadable.
 6. Confirm `.htaccess` is present. The File Manager hides dotfiles by default —
    enable **Settings → Show hidden files**. If it did not extract, upload
-   `client/build/.htaccess` on its own.
+   `build/.htaccess` on its own.
 
 ### Option B — FTP
 
 hPanel → **Files** → **FTP Accounts** gives you the host, username and port
-(21). Point FileZilla at it and upload the **contents** of `client/build/` into
+(21). Point FileZilla at it and upload the **contents** of `build/` into
 `public_html`, with the transfer set to show hidden files so `.htaccess` goes
 across.
 
-### Option C — Git deployment
+### Option C — Node.js app hosting (fully automatic Git deploys)
 
-hPanel → **Advanced** → **Git**. Hostinger's shared-plan Git integration only
-*pulls files* — it does not run `npm install` or `npm run build`. To use it,
-commit the built output (remove `client/build/` from `.gitignore` and point the
-repository path at it), or keep using Option A. For anything more automated,
-Hostinger's Node.js/VPS plans can run a real build step.
+This is the option to use if you want push-to-deploy without a GitHub Actions
+build step. Hostinger's Node.js panel runs `npm install` after pulling from
+Git, and this repo's `postinstall` script (`react-scripts build`) turns that
+into a full production build automatically — no manual build, no zip, no
+extra entry file to write.
+
+1. hPanel → **Advanced** → **Node.js** → **Create Application**.
+2. **Node.js version:** 18 or newer.
+3. **Application root:** the folder this repository is checked out into
+   (e.g. `/rvnl_POC` if using Hostinger's Git integration to clone it there).
+4. **Application startup file:** `server.js` — already present at the
+   repository root, nothing to create.
+5. **Application URL:** your domain, e.g. `rvnl.astrikos.org`.
+6. Connect the repository the same way as described in
+   [HOSTINGER_SETUP.md](HOSTINGER_SETUP.md) §2, but point at branch `master`
+   directly — there is no separate `deployment` branch needed for this path,
+   since the build happens on Hostinger during `npm install`.
+7. Click **NPM Install** in the Node.js panel (this installs dependencies and
+   triggers the build via `postinstall`), then **Start**/**Restart** the app.
+8. Every subsequent `git push` to `master`, followed by a Git pull in hPanel
+   and clicking **NPM Install** again, redeploys the latest build.
+
+Static hosting (Option A/B) remains available and requires no Node.js plan —
+use whichever fits your Hostinger plan.
 
 ---
 
@@ -114,14 +139,14 @@ Hostinger's Node.js/VPS plans can run a real build step.
 
 To serve from `https://example.com/nirman-setu/` instead of the domain root:
 
-1. In [client/.env.production](client/.env.production), set:
+1. In [.env.production](.env.production), set:
    ```
    PUBLIC_URL=/nirman-setu
    ```
-   The React Router `basename` in [App.js](client/src/App.js) reads the same
+   The React Router `basename` in [App.js](src/App.js) reads the same
    value, so routes and assets stay in sync.
 
-2. In [client/public/.htaccess](client/public/.htaccess), change both paths in
+2. In [public/.htaccess](public/.htaccess), change both paths in
    the rewrite block:
    ```apache
    RewriteBase /nirman-setu/
@@ -158,7 +183,7 @@ without a manual refresh.
 
 | Symptom | Cause | Fix |
 | --- | --- | --- |
-| Home page loads, but refreshing `/twin` gives 404 | `.htaccess` missing or not extracted | Re-upload `client/build/.htaccess`; enable hidden files in File Manager |
+| Home page loads, but refreshing `/twin` gives 404 | `.htaccess` missing or not extracted | Re-upload `build/.htaccess`; enable hidden files in File Manager |
 | Blank white page, console shows 404s for `/static/js/...` | Files extracted one level too deep, or app is in a subfolder without `PUBLIC_URL` | Move contents up so `index.html` sits directly in `public_html`, or follow §5 |
 | Blank page, console shows `main.js` 404 with a `\` in the path | Archive built with Windows path separators | Repackage with `npm run package` — the script normalises separators |
 | Redirect loop | HTTPS forced before the SSL certificate is active | Wait for SSL, or comment out §2 of `.htaccess` |
@@ -191,7 +216,7 @@ Worth stating plainly before this is shown to a client as a live system:
   security. If it needs to be private, add Hostinger's **Password Protect
   Directories** (hPanel → Advanced) on `public_html`.
 - **No shared persistence.** Approvals, DSR submissions and acknowledgements
-  survive a reload — [store.js](client/src/services/store.js) writes to
+  survive a reload — [store.js](src/services/store.js) writes to
   `localStorage` — but they live in *each visitor's own browser*. Two people
   looking at the same URL do not see each other's actions, and clearing browser
   data resets the demo. Uploaded site photos are held in memory only and are
